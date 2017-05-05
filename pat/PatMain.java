@@ -34,6 +34,14 @@ public class PatMain {
 			e.printStackTrace();
 		}
 	}
+	
+	public PatMain() {
+		
+	}
+	
+	public PatMain(String patName) {
+		this.patName = patName;
+	}
 
 	/**
 	 * Open the window.
@@ -73,7 +81,7 @@ public class PatMain {
 		Label lblDoctorsName = new Label(shlMain, SWT.NONE);
 		lblDoctorsName.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		lblDoctorsName.setBounds(306, 240, 136, 24);
-		lblDoctorsName.setText("Patient's Name");
+		lblDoctorsName.setText(patName);
 		
 		Menu menu = new Menu(shlMain, SWT.BAR);
 		shlMain.setMenuBar(menu);
