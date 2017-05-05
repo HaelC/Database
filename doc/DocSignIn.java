@@ -92,18 +92,21 @@ public class DocSignIn {
 				Doctor doctor = dao.findByMobile(text_Mobile.getText().trim());
 				if(doctor == null) {
 					MessageBox box = new MessageBox(shell);
-					box.setMessage("¸ÃÊÖ»úºÅÎ´×¢²á");
+					box.setMessage("è¯¥æ‰‹æœºå·æœªæ³¨å†Œ");
 					box.open();
 					return;
 				}//To deal with the error:java.lang.NullPointerException.
 				
 				if(doctor.getPassword().equals(text_Password.getText().trim())) {
 					display.close();
-					doc.DocMain.main(null);
+					//doc.DocMain.main(null);
+					DocMain main = new DocMain(doctor.getDoctor_name());
+					//Here pass the information-- doctor's name to the new window
+					main.open();
 				}
 				else {
 					MessageBox box = new MessageBox(shell);
-					box.setMessage("ÃÜÂë´íÎó");
+					box.setMessage("å¯†ç é”™è¯¯");
 					box.open();
 					return;
 				}
