@@ -88,7 +88,7 @@ public class DocMain {
 		Label lblDoctorsName = new Label(shlMain, SWT.NONE);
 		lblDoctorsName.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		lblDoctorsName.setBounds(306, 240, 136, 24);
-		lblDoctorsName.setText("Doctor's Name");
+		lblDoctorsName.setText(docName);
 		
 		Menu menu = new Menu(shlMain, SWT.BAR);
 		shlMain.setMenuBar(menu);
