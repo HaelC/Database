@@ -41,6 +41,14 @@ public class DocMain {
 			e.printStackTrace();
 		}
 	}
+	
+	public DocMain() {
+		
+	}
+	
+	public DocMain(String docName) {
+		this.docName = docName;
+	}
 
 	/**
 	 * Open the window.
