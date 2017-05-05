@@ -59,6 +59,7 @@ public class PatSignIn {
 		shell = new Shell();
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		shell.setSize(800, 600);
+
 		shell.setText("\u767B\u5F55-\u60A3\u8005");
 		
 		int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -92,17 +93,20 @@ public class PatSignIn {
 				Patient patient = patientDao.findByMobile(text_Mobile.getText().trim());
 				if(patient == null) {
 					MessageBox box = new MessageBox(shell);
-					box.setMessage("¸ÃÊÖ»úºÅÎ´×¢²á");
+					box.setMessage("è¯¥æ‰‹æœºå·æœªæ³¨å†Œ");
 					box.open();
 					return;
 				}//To deal with the error:java.lang.NullPointerException.
 				if (patient.getPassword().equals(text_Password.getText().trim())) {
 					display.close();
-					pat.PatMain.main(null);
+					//pat.PatMain.main(null);
+					PatMain main = new PatMain(patient.getPat_name());
+					//Here pass the information-- doctor's name to the new window
+					main.open();
 				}
 				else {
 					MessageBox box = new MessageBox(shell);
-					box.setMessage("ÃÜÂë´íÎó");
+					box.setMessage("å¯†ç é”™è¯¯");
 					box.open();
 					return;
 				}
