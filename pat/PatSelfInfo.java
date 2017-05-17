@@ -6,11 +6,13 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import experi.dao.PatientDao;
 import experi.entity.Patient;
+import ui.Login;
 
 import java.awt.Toolkit;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
@@ -22,6 +24,8 @@ public class PatSelfInfo {
 
 	protected Shell shell;
 	protected Display display;
+	//private Combo sex;
+	//private Combo age;
 	private Text text_Height;
 	private Text text_Weight;
 	private Text text_BloodPressure;
@@ -29,6 +33,7 @@ public class PatSelfInfo {
 	private Text text_historyDisease;
 	private Text text_Note;
 	private Text text;
+	protected String pat_mobile;
 
 	/**
 	 * Launch the application.
@@ -41,6 +46,14 @@ public class PatSelfInfo {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public PatSelfInfo() {
+		
+	}
+	
+	public PatSelfInfo(String pat_mobile) {
+		this.pat_mobile = pat_mobile;
 	}
 
 	/**
@@ -62,6 +75,9 @@ public class PatSelfInfo {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
+		PatientDao patientDao = new PatientDao();
+		Patient patient = patientDao.findByMobile(pat_mobile);
+		
 		shell = new Shell();
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		shell.setSize(800, 600);
@@ -91,7 +107,7 @@ public class PatSelfInfo {
 		
 		Combo age = new Combo(shell, SWT.READ_ONLY);
 		age.setBounds(360, 75, 114, 32);
-		age.setItems("0-30ÀÍ","31-40ÀÍ","41-50ÀÍ","51-60ÀÍ","61-70ÀÍ","71-80ÀÍ","80ÀÍ“‘…œ");
+		age.setItems("0-30Â≤Å","31-40Â≤Å","41-50Â≤Å","51-60Â≤Å","61-70Â≤Å","71-80Â≤Å","80Â≤Å‰ª•‰∏ä");
 		
 		Label lbl_Height = new Label(shell, SWT.NONE);
 		lbl_Height.setText("\u8EAB        \u9AD8");
@@ -145,12 +161,19 @@ public class PatSelfInfo {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Patient patient = new Patient("1234", sex.getText(), age.getText(), text_Height.getText(), text_Weight.getText(), text_familiarDisease.getText(), text_historyDisease.getText());
-				PatientDao patientDao = new PatientDao();
+				//Patient patient = new Patient("1234", sex.getText(), age.getText(), text_Height.getText(), text_Weight.getText(), text_familiarDisease.getText(), text_historyDisease.getText());
+				//PatientDao patientDao = new PatientDao();
+				//Patient patient = new Patient(pat_id, sex.getText(), age.getText(), text_Height.getText(), text_Weight.getText(), text_familiarDisease.getText(), text_historyDisease.getText());
+				//Patient patient = patientDao.findById(pat_id);
+				//Patient updatePatient = new Patient(patient.getPat_id(), patient.getPat_name(), patient.getPassword(), patient.getPat_mobile(), "male", "0-100", text_Height.getText(), text_Weight.getText(), text_familiarDisease.getText(), text_historyDisease.getText());
+				//PatientDao patientDao = new PatientDao();
+				Patient updatePatient = new Patient(patient.getPat_id(), patient.getPat_name(), patient.getPassword(), patient.getPat_mobile(), "male", "0-100", text_Height.getText(), text_Weight.getText(), text_familiarDisease.getText(), text_historyDisease.getText());
 				try {
-					patientDao.completePatient(patient);
+					patientDao.completePatient(updatePatient);
 					display.close();
-					PatMain.main(null);
+					//PatMain.main(null);
+					PatMain main = new PatMain(patient.getPat_mobile());
+					main.open();
 				}catch (Exception ex) {
 					// TODO: handle exception
 					ex.printStackTrace();
