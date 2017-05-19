@@ -4,7 +4,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import experi.dao.DoctorDao;
 import experi.dao.PatientDao;
+import experi.entity.Doctor;
 import experi.entity.Patient;
 
 import java.awt.Toolkit;
@@ -12,16 +14,21 @@ import java.awt.Toolkit;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Text;
 
 public class DocList {
 
 	protected Shell shell;
 	protected Display display;
-
+	private Text text_toFind;
+	protected String pat_id;
+	protected Doctor doctor;
+	
 	/**
 	 * Launch the application.
 	 * @param args
@@ -33,6 +40,14 @@ public class DocList {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public DocList() {
+		
+	}
+	
+	public DocList(String pat_id) {
+		this.pat_id = pat_id;
 	}
 
 	/**
@@ -54,6 +69,9 @@ public class DocList {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
+		PatientDao dao = new PatientDao();
+		Patient patient = dao.findById(pat_id);
+		
 		shell = new Shell();
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		shell.setSize(800, 600);
@@ -65,47 +83,87 @@ public class DocList {
 		int y = (screenHeight - 600) / 2;
 		shell.setLocation(x, y);
 		
-		Combo combo = new Combo(shell, SWT.NONE);
-		combo.setBounds(151, 101, 97, 32);
-		
 		Label lblDoc = new Label(shell, SWT.NONE);
 		lblDoc.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
-		lblDoc.setBounds(64, 104, 59, 24);
-		lblDoc.setText("\u533B\u751F");
+		lblDoc.setBounds(65, 53, 245, 24);
+		lblDoc.setText("\u67E5\u627E\u533B\u751F\uFF08\u8BF7\u8F93\u5165\u533B\u751F\u59D3\u540D\uFF09");
 		
-		Canvas canvas = new Canvas(shell, SWT.NONE);
-		canvas.setBounds(427, 84, 142, 200);
+		text_toFind = new Text(shell, SWT.BORDER);
+		text_toFind.setBounds(328, 50, 108, 30);
+		
+		Label lblName = new Label(shell, SWT.NONE);
+		lblName.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 12, SWT.NORMAL));
+		lblName.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblName.setBounds(312, 152, 149, 34);
+		lblName.setVisible(false);
+		
+		Label lblMobile = new Label(shell, SWT.NONE);
+		lblMobile.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 12, SWT.NORMAL));
+		lblMobile.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblMobile.setBounds(312, 260, 149, 34);
+		lblMobile.setVisible(false);
+		
+		Label lblNotFound = new Label(shell, SWT.NONE);
+		lblNotFound.setText("\u672A\u627E\u5230\u5BF9\u5E94\u533B\u751F");
+		lblNotFound.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 12, SWT.NORMAL));
+		lblNotFound.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblNotFound.setBounds(307, 253, 194, 34);
+		lblNotFound.setVisible(false);
+		
+		Button btnFind = new Button(shell, SWT.NONE);
+		btnFind.addSelectionListener(new SelectionAdapter() {
+			
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				//PatientDao patientDao = new PatientDao();
+				//Doctor doctor = patientDao.findDoc(patient);
+				DoctorDao doctorDao = new DoctorDao();
+				doctor = doctorDao.findByName(text_toFind.getText());
+				if (doctor == null) {
+					lblNotFound.setVisible(true);
+					lblName.setVisible(false);
+					lblMobile.setVisible(false);
+				}
+				else {
+					lblNotFound.setVisible(false);
+					lblName.setText(doctor.getDoctor_name());
+					lblName.setVisible(true);
+					lblMobile.setText(doctor.getDoctor_mobile());
+					lblMobile.setVisible(true);
+				}
+			}
+			
+		});
+		btnFind.setBounds(494, 48, 114, 34);
+		btnFind.setText("\u67E5\u627E");
 		
 		Button btnLink = new Button(shell, SWT.NONE);
 		btnLink.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String id = "1";
-				PatientDao dao = new PatientDao();
-				dao.updatePatient(new Patient(id, null, null, null), "1");
+				dao.updatePatient(patient, doctor.getDoctor_id());
+				MessageBox messageBox = new MessageBox(shell);
+				messageBox.setMessage("关联成功");
+				messageBox.open();
 			}
 		});
-		btnLink.setBounds(432, 445, 130, 34);
-		btnLink.setText("\u5173\u8054/\u53D6\u6D88\u5173\u8054");
+		btnLink.setBounds(312, 357, 130, 34);
+		btnLink.setText("\u5173\u8054");
 		
 		Button btnBack = new Button(shell, SWT.NONE);
 		btnBack.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				display.close();
-				PatMain.main(null);
+				//PatMain.main(null);
+				PatMain main = new PatMain(patient.getPat_mobile());
+				main.open();
 			}
 		});
 		btnBack.setBounds(640, 484, 97, 34);
 		btnBack.setText("\u8FD4\u56DE");
-		
-		Label lblName = new Label(shell, SWT.NONE);
-		lblName.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 12, SWT.NORMAL));
-		lblName.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblName.setBounds(427, 318, 149, 34);
-		lblName.setText("Doc'sName");
-		
-		
 
 	}
 }
