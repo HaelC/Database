@@ -8,8 +8,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Label;
 
 import java.awt.Toolkit;
-import java.util.*;
-import com.ibm.icu.text.SimpleDateFormat;
+//import java.util.*;
+//import com.ibm.icu.text.SimpleDateFormat;
+
+import experi.dao.DoctorDao;
+import experi.entity.Doctor;
+
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
@@ -22,11 +26,10 @@ public class DocMain {
 
 	protected Shell shlMain;
 	protected Display display;
+	private String doc_mobile;
 	
 	/*
-	public DocMain(DocSignIn signIn) {
-		this.mobile = signIn.text_Mobile.getText();
-	}
+	
 	*/
 
 	/**
@@ -46,8 +49,8 @@ public class DocMain {
 		
 	}
 	
-	public DocMain(String docName) {
-		this.docName = docName;
+	public DocMain(String doc_mobile) {
+		this.doc_mobile = doc_mobile;
 	}
 
 	/**
@@ -69,6 +72,10 @@ public class DocMain {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
+		DoctorDao doctorDao = new DoctorDao();
+		Doctor doctor = doctorDao.findByMobile(doc_mobile);
+		String doc_name = doctor.getDoctor_name();
+		
 		shlMain = new Shell();
 		shlMain.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		shlMain.setSize(800, 600);
@@ -88,7 +95,7 @@ public class DocMain {
 		Label lblDoctorsName = new Label(shlMain, SWT.NONE);
 		lblDoctorsName.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		lblDoctorsName.setBounds(306, 240, 136, 24);
-		lblDoctorsName.setText(docName);
+		lblDoctorsName.setText(doc_name);
 		
 		Menu menu = new Menu(shlMain, SWT.BAR);
 		shlMain.setMenuBar(menu);
