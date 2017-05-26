@@ -13,9 +13,13 @@ public class Patient {
 	private String pat_familialDisease;
 	private String pat_historyDisease;
 	private String doctor;//name
+	private String doc_id;
+	private String pat_QQ;
+	
 	public Patient() {
 		super();
 	}
+	/*
 	public Patient(String pat_id, String pat_name, String password,String pat_age, String doctor) {
 		super();
 		this.pat_id = pat_id;
@@ -25,12 +29,22 @@ public class Patient {
 		this.doctor = doctor;
 
 	}
-	public Patient(String pat_id, String pat_name, String pat_password,String pat_mobile) {
+	*/
+	
+	public Patient(String pat_id, String pat_name, String pat_password, String pat_mobile) {
 		super();
 		this.pat_id = pat_id;
 		this.pat_name = pat_name;
 		this.pat_password = pat_password;
 		this.pat_mobile = pat_mobile;
+	}
+	public Patient(String pat_id, String pat_name, String pat_password, String pat_mobile, String doc_id) {
+		super();
+		this.pat_id = pat_id;
+		this.pat_name = pat_name;
+		this.pat_password = pat_password;
+		this.pat_mobile = pat_mobile;
+		this.doc_id = doc_id;
 	}
 	public Patient(String pat_id, String pat_sex, String pat_age, String pat_height, String pat_weight, String pat_familialDisease, String pat_historyDisease) {
 		super();
@@ -40,6 +54,20 @@ public class Patient {
 		this.pat_weight = pat_weight;
 		this.pat_familialDisease = pat_familialDisease;
 		this.pat_historyDisease = pat_historyDisease;
+	}
+	public Patient(String pat_id, String pat_name, String pat_password, String pat_mobile, String pat_sex, String pat_age, String pat_height, String pat_weight, String pat_familialDisease, String pat_historyDisease, String pat_QQ) {
+		super();
+		this.pat_id = pat_id;
+		this.pat_name = pat_name;
+		this.pat_password = pat_password;
+		this.pat_mobile = pat_mobile;
+		this.pat_sex = pat_sex;
+		this.pat_age = pat_age;
+		this.pat_height = pat_height;
+		this.pat_weight = pat_weight;
+		this.pat_familialDisease = pat_familialDisease;
+		this.pat_historyDisease = pat_historyDisease;
+		this.pat_QQ = pat_QQ;
 	}
 	public String getPat_id() {
 		return pat_id;
@@ -72,6 +100,12 @@ public class Patient {
 	public void setDoctor(String doctor) {
 		this.doctor = doctor;
 	}
+	public String getDoc_id() {
+		return doc_id;
+	}
+	public void setDoc_id(String doc_id) {
+		this.doc_id = doc_id;
+	}
 	
 	public String getPat_mobile() {
 		return pat_mobile;
@@ -100,7 +134,7 @@ public class Patient {
 	public String getPat_familialDisease() {
 		return pat_familialDisease;
 	}
-	public void setPat_familiarDisease(String pat_familialDisease) {
+	public void setPat_familialDisease(String pat_familialDisease) {
 		this.pat_familialDisease = pat_familialDisease;
 	}
 	public String getPat_historyDisease() {
@@ -108,5 +142,11 @@ public class Patient {
 	}
 	public void setPat_historyDisease(String pat_historyDisease) {
 		this.pat_historyDisease = pat_historyDisease;
+	}
+	public String getPat_QQ() {
+		return pat_QQ;
+	}
+	public void setPat_QQ(String pat_QQ) {
+		this.pat_QQ = pat_QQ;
 	}
 }
