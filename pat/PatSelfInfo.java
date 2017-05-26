@@ -5,10 +5,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import experi.dao.PatientDao;
+import experi.dao.PressureDao;
 import experi.entity.Patient;
-import ui.Login;
+import experi.entity.Pressure;
+//import ui.Login;
 
 import java.awt.Toolkit;
+import java.sql.Timestamp;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
@@ -28,12 +31,14 @@ public class PatSelfInfo {
 	//private Combo age;
 	private Text text_Height;
 	private Text text_Weight;
-	private Text text_BloodPressure;
+	private Text text_Diastolic;
 	private Text text_familiarDisease;
 	private Text text_historyDisease;
 	private Text text_Note;
-	private Text text;
+	private Text text_Systolic;
 	protected String pat_mobile;
+	protected String pat_name;
+	protected String pat_password;
 
 	/**
 	 * Launch the application.
@@ -52,8 +57,16 @@ public class PatSelfInfo {
 		
 	}
 	
+	/*
 	public PatSelfInfo(String pat_mobile) {
 		this.pat_mobile = pat_mobile;
+	}
+	*/
+	
+	public PatSelfInfo(String pat_name, String pat_mobile, String pat_password) {
+		this.pat_name = pat_name;
+		this.pat_mobile = pat_mobile;
+		this.pat_password = pat_password;
 	}
 
 	/**
@@ -75,8 +88,8 @@ public class PatSelfInfo {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		PatientDao patientDao = new PatientDao();
-		Patient patient = patientDao.findByMobile(pat_mobile);
+		//PatientDao patientDao = new PatientDao();
+		//Patient patient = patientDao.findByMobile(pat_mobile);
 		
 		shell = new Shell();
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -130,8 +143,8 @@ public class PatSelfInfo {
 		lbl_BloodPressure.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		lbl_BloodPressure.setBounds(246, 225, 90, 24);
 		
-		text_BloodPressure = new Text(shell, SWT.BORDER);
-		text_BloodPressure.setBounds(360, 225, 80, 30);
+		text_Diastolic = new Text(shell, SWT.BORDER);
+		text_Diastolic.setBounds(360, 225, 80, 30);
 		
 		Label lbl_familialDisease = new Label(shell, SWT.NONE);
 		lbl_familialDisease.setText("\u5BB6\u65CF\u75C5\u51B5");
@@ -161,18 +174,25 @@ public class PatSelfInfo {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				//Patient patient = new Patient("1234", sex.getText(), age.getText(), text_Height.getText(), text_Weight.getText(), text_familiarDisease.getText(), text_historyDisease.getText());
-				//PatientDao patientDao = new PatientDao();
-				//Patient patient = new Patient(pat_id, sex.getText(), age.getText(), text_Height.getText(), text_Weight.getText(), text_familiarDisease.getText(), text_historyDisease.getText());
-				//Patient patient = patientDao.findById(pat_id);
-				//Patient updatePatient = new Patient(patient.getPat_id(), patient.getPat_name(), patient.getPassword(), patient.getPat_mobile(), "male", "0-100", text_Height.getText(), text_Weight.getText(), text_familiarDisease.getText(), text_historyDisease.getText());
-				//PatientDao patientDao = new PatientDao();
-				Patient updatePatient = new Patient(patient.getPat_id(), patient.getPat_name(), patient.getPassword(), patient.getPat_mobile(), "male", "0-100", text_Height.getText(), text_Weight.getText(), text_familiarDisease.getText(), text_historyDisease.getText());
+				
+				PatientDao patientDao = new PatientDao();
+				Patient patient = new Patient(null, pat_name, pat_password, pat_mobile, sex.getText(), age.getText(), text_Height.getText(), text_Weight.getText(), text_familiarDisease.getText(), text_historyDisease.getText(), null);
 				try {
-					patientDao.completePatient(updatePatient);
+					patientDao.insertPatient(patient); 	//first insert the patient's information to SQL.However we don't know 
+					//Patient patient2 = patientDao.findByMobile(pat_mobile);
+					String pat_id = patientDao.findByMobile(pat_mobile).getPat_id();
+					PressureDao pressureDao = new PressureDao();
+					Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+					Pressure pressure = new Pressure(null, pat_id, text_Systolic.getText(), text_Diastolic.getText(), timestamp);
+					pressureDao.insertPressure(pressure);
+					//Pressure pressure2 = pressureDao.findByTime(timestamp);
+					//Patient pat = new Patient(pat_id, pressureDao.findByTime(timestamp).getPressure_id(), null, null, null);
+					MessageBox messageBox= new MessageBox(shell);
+					messageBox.setMessage("\u6ce8\u518c\u6210\u529f");
+					messageBox.open();
 					display.close();
 					//PatMain.main(null);
-					PatMain main = new PatMain(patient.getPat_mobile());
+					PatMain main = new PatMain(pat_mobile);
 					main.open();
 				}catch (Exception ex) {
 					// TODO: handle exception
@@ -193,8 +213,8 @@ public class PatSelfInfo {
 		lblKg.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		lblKg.setBounds(451, 181, 43, 24);
 		
-		text = new Text(shell, SWT.BORDER);
-		text.setBounds(563, 225, 80, 30);
+		text_Systolic = new Text(shell, SWT.BORDER);
+		text_Systolic.setBounds(563, 225, 80, 30);
 		
 		Label lblmmhg = new Label(shell, SWT.NONE);
 		lblmmhg.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 7, SWT.NORMAL));
