@@ -100,7 +100,7 @@ public class DocSignIn {
 				if(doctor.getPassword().equals(text_Password.getText().trim())) {
 					display.close();
 					//doc.DocMain.main(null);
-					DocMain main = new DocMain(doctor.getDoctor_name());
+					DocMain main = new DocMain(doctor.getDoctor_mobile());
 					//Here pass the information-- doctor's name to the new window
 					main.open();
 				}
