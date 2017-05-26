@@ -95,7 +95,7 @@ public class DoctorDao extends BaseDao {
 		
 	}
 	
-	public Doctor findByName(String doc_name) {
+	public Doctor findByName(String doc_name){
 		getJdbcTemplate();
 		try{
 			String sql="select * from dbo.Doctor where doc_name=?";
@@ -105,13 +105,13 @@ public class DoctorDao extends BaseDao {
 						throws SQLException {
 					Doctor doctor=new Doctor();
 					doctor.setDoctor_id(set.getString("doc_id"));
-					doctor.setDoctor_name(set.getString(doc_name));
+					doctor.setDoctor_name(doc_name);
 					doctor.setPassword(set.getString("doc_password"));
 					doctor.setMobile(set.getString("doc_mobile"));
 					return doctor;
 				}
 			});
-			if(query.size() == 0) {
+			if(query.size() == 0){				//Modify it by pretty teaching assistant's advice.
 				return null;
 			}
 			return (Doctor) query.get(0);
@@ -119,6 +119,7 @@ public class DoctorDao extends BaseDao {
 			e.printStackTrace();
 		}
 		return null;
+		
 	}
 	
 	public static void main(String[] args) {
