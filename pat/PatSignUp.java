@@ -123,33 +123,45 @@ public class PatSignUp {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(text_Password.getText().equals(text_Confirm.getText()) && checkPhoneNumber(text_Mobile.getText())) {
-					Patient patient = new Patient("1234", text_Name.getText(), text_Password.getText(), text_Mobile.getText());
-					PatientDao dao = new PatientDao();
-					try {
-						dao.insertPatient(patient);
-						MessageBox messageBox= new MessageBox(shlSignUppatient);
-						messageBox.setMessage("\u6ce8\u518c\u6210\u529f");
+					PatientDao patientDao = new PatientDao();
+					Patient checkIfExist = patientDao.findByMobile(text_Mobile.getText().trim());
+					if(checkIfExist == null) {
+						Patient patient = new Patient(null, text_Name.getText(), text_Password.getText(), text_Mobile.getText());
+						//PatientDao dao = new PatientDao();
+						try {
+							//dao.insertPatient(patient);
+							//MessageBox messageBox= new MessageBox(shlSignUppatient);
+							//messageBox.setMessage("\u6ce8\u518c\u6210\u529f");
+							//messageBox.open();
+							display.close();
+							//PatSelfInfo.main(null);
+							//PatSelfInfo patSelfInfo = new PatSelfInfo(patient.getPat_mobile());
+							PatSelfInfo patSelfInfo = new PatSelfInfo(patient.getPat_name(), patient.getPat_mobile(), patient.getPassword()); 
+							patSelfInfo.open();
+						}catch (Exception ex) {
+							// TODO: handle exception
+							ex.printStackTrace();
+						}
+					}
+					else {
+						MessageBox messageBox = new MessageBox(shlSignUppatient);
+						messageBox.setMessage("è¯¥æ‰‹æœºå·å·²æ³¨å†Œï¼");
 						messageBox.open();
-						display.close();
-						PatSelfInfo.main(null);
-					}catch (Exception ex) {
-						// TODO: handle exception
-						ex.printStackTrace();
 					}
 				}
 				else if (!text_Password.getText().equals(text_Confirm.getText())){
 					MessageBox messageBox = new MessageBox(shlSignUppatient);
-					messageBox.setMessage("Á½´ÎÃÜÂë²»Ò»ÖÂ");
+					messageBox.setMessage("ä¸¤æ¬¡å¯†ç ä¸ä¸€è‡´");
 					messageBox.open();
 				}
 				else if(text_Name.getText().isEmpty()) {
 					MessageBox messageBox = new MessageBox(shlSignUppatient);
-					messageBox.setMessage("ĞÕÃû²»ÄÜÎª¿Õ");
+					messageBox.setMessage("å§“åä¸èƒ½ä¸ºç©º");
 					messageBox.open();
 				}
 				else {
 					MessageBox messageBox = new MessageBox(shlSignUppatient);
-					messageBox.setMessage("ÎŞĞ§µÄÊÖ»úºÅÂë");
+					messageBox.setMessage("æ— æ•ˆçš„æ‰‹æœºå·ç ");
 					messageBox.open();
 				}
 			}
