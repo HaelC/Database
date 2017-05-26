@@ -166,24 +166,25 @@ public class DocSignUp {
 						messageBox.setMessage("\u6ce8\u518c\u6210\u529f");
 						messageBox.open();
 						display.close();
-						DocMain.main(null);
+						DocMain main = new DocMain(doctor.getDoctor_mobile());
+						main.open();
 					}catch(Exception ex) {
 						ex.printStackTrace();
 					}
 				}
 				else if (!text_Password.getText().equals(text_Confirm.getText())){
 					MessageBox messageBox = new MessageBox(shlSignUpdoctor);
-					messageBox.setMessage("Á½´ÎÃÜÂë²»Ò»ÖÂ");
+					messageBox.setMessage("ä¸¤æ¬¡å¯†ç ä¸ä¸€è‡´");
 					messageBox.open();
 				}
 				else if(text_Name.getText().isEmpty()) {
 					MessageBox messageBox = new MessageBox(shlSignUpdoctor);
-					messageBox.setMessage("ĞÕÃû²»ÄÜÎª¿Õ");
+					messageBox.setMessage("å§“åä¸èƒ½ä¸ºç©º");
 					messageBox.open();
 				}
 				else {
 					MessageBox messageBox = new MessageBox(shlSignUpdoctor);
-					messageBox.setMessage("ÎŞĞ§µÄÊÖ»úºÅÂë");
+					messageBox.setMessage("æ— æ•ˆçš„æ‰‹æœºå·ç ");
 					messageBox.open();
 				}
 			}
