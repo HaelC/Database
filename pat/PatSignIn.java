@@ -59,7 +59,6 @@ public class PatSignIn {
 		shell = new Shell();
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		shell.setSize(800, 600);
-
 		shell.setText("\u767B\u5F55-\u60A3\u8005");
 		
 		int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -100,7 +99,7 @@ public class PatSignIn {
 				if (patient.getPassword().equals(text_Password.getText().trim())) {
 					display.close();
 					//pat.PatMain.main(null);
-					PatMain main = new PatMain(patient.getPat_name());
+					PatMain main = new PatMain(patient.getPat_mobile());
 					//Here pass the information-- doctor's name to the new window
 					main.open();
 				}
