@@ -1,7 +1,7 @@
 package pat;
 
 import java.awt.Toolkit;
-import java.util.Date;
+//import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -11,7 +11,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import com.ibm.icu.text.SimpleDateFormat;
+//import com.ibm.icu.text.SimpleDateFormat;
+
+import experi.dao.PatientDao;
+import experi.entity.Patient;
 
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -21,6 +24,8 @@ public class PatMain {
 
 	protected Shell shlMain;
 	protected Display display;
+	protected String pat_mobile;
+	private String pat_name;
 
 	/**
 	 * Launch the application.
@@ -39,8 +44,8 @@ public class PatMain {
 		
 	}
 	
-	public PatMain(String patName) {
-		this.patName = patName;
+	public PatMain(String pat_mobile) {
+		this.pat_mobile = pat_mobile;
 	}
 
 	/**
@@ -62,6 +67,10 @@ public class PatMain {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
+		PatientDao patientDao = new PatientDao();
+		Patient patient = patientDao.findByMobile(pat_mobile);
+		pat_name = patient.getPat_name();
+		
 		shlMain = new Shell();
 		shlMain.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		shlMain.setSize(800, 600);
@@ -81,7 +90,7 @@ public class PatMain {
 		Label lblDoctorsName = new Label(shlMain, SWT.NONE);
 		lblDoctorsName.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		lblDoctorsName.setBounds(306, 240, 136, 24);
-		lblDoctorsName.setText(patName);
+		lblDoctorsName.setText(pat_name);
 		
 		Menu menu = new Menu(shlMain, SWT.BAR);
 		shlMain.setMenuBar(menu);
@@ -96,8 +105,17 @@ public class PatMain {
 		menuDoc.addSelectionListener(new SelectionAdapter() {
 			
 			public void widgetSelected(SelectionEvent e) {
-				display.close();
-				PatSelfDoc.main(null);
+				if(patient.getDoc_id() == null) {
+					//display.close();
+					MessageBox messageBox = new MessageBox(shlMain);
+					messageBox.setMessage("您未关联主治医师。请前往医生一览页面选择关联主治医师");
+					messageBox.open();
+				}
+				else {
+					display.close();
+					PatSelfDoc patSelfDoc = new PatSelfDoc(patient.getPat_id());
+					patSelfDoc.open();
+				}
 			}
 		});
 		menuDoc.setText("\u4E3B\u6CBB\u533B\u751F");
@@ -107,7 +125,9 @@ public class PatMain {
 			
 			public void widgetSelected(SelectionEvent e) {
 				display.close();
-				DocList.main(null);
+				//DocList.main(null);
+				DocList docList = new DocList(patient.getPat_id());
+				docList.open();
 			}
 		});
 		menuDocList.setText("\u533B\u751F\u4E00\u89C8");
@@ -123,7 +143,9 @@ public class PatMain {
 			
 			public void widgetSelected(SelectionEvent e) {
 				display.close();
-				PatSetting.main(null);
+				//PatSetting.main(null);
+				PatSetting patSetting = new PatSetting(patient.getPat_id());
+				patSetting.open();
 			}
 		});
 		menuSelfInfo.setText("\u4E2A\u4EBA\u4FE1\u606F");
