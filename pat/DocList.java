@@ -12,10 +12,10 @@ import experi.entity.Patient;
 import java.awt.Toolkit;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Combo;
+//import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Canvas;
+//import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -27,8 +27,11 @@ public class DocList {
 	protected Display display;
 	private Text text_toFind;
 	protected String pat_id;
-	protected Doctor doctor;
+	//protected Doctor doctor;
+	private int page = 1;
 	
+	protected DoctorDao doctorDao;
+	protected Doctor doctor;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -100,7 +103,7 @@ public class DocList {
 		Label lblMobile = new Label(shell, SWT.NONE);
 		lblMobile.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 12, SWT.NORMAL));
 		lblMobile.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblMobile.setBounds(312, 260, 149, 34);
+		lblMobile.setBounds(312, 260, 160, 34);
 		lblMobile.setVisible(false);
 		
 		Label lblNotFound = new Label(shell, SWT.NONE);
@@ -119,7 +122,7 @@ public class DocList {
 				
 				//PatientDao patientDao = new PatientDao();
 				//Doctor doctor = patientDao.findDoc(patient);
-				DoctorDao doctorDao = new DoctorDao();
+				doctorDao = new DoctorDao();
 				doctor = doctorDao.findByName(text_toFind.getText());
 				if (doctor == null) {
 					lblNotFound.setVisible(true);
@@ -139,6 +142,63 @@ public class DocList {
 		btnFind.setBounds(494, 48, 114, 34);
 		btnFind.setText("\u67E5\u627E");
 		
+		Label lblPage = new Label(shell, SWT.NONE);
+		lblPage.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
+		lblPage.setText(Integer.toString(page));
+		lblPage.setBounds(380, 398, 33, 24);
+		
+		Button btnPre = new Button(shell, SWT.NONE);
+		btnPre.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (page > 1) {
+					page--;
+					//DoctorDao doctorDao = new DoctorDao();
+					doctor = doctorDao.findByNameAndIndex(text_toFind.getText(), page);
+					if (doctor == null) {
+						lblNotFound.setVisible(true);
+						lblName.setVisible(false);
+						lblMobile.setVisible(false);
+					}
+					else {
+						lblNotFound.setVisible(false);
+						lblName.setText(doctor.getDoctor_name());
+						lblName.setVisible(true);
+						lblMobile.setText(doctor.getDoctor_mobile());
+						lblMobile.setVisible(true);
+					}
+					lblPage.setText(Integer.toString(page));
+				}
+			}
+		});
+		btnPre.setBounds(320, 398, 33, 24);
+		btnPre.setText("<");
+		
+		Button btnNext = new Button(shell, SWT.NONE);
+		btnNext.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				page++;
+				//DoctorDao doctorDao = new DoctorDao();
+				doctor = doctorDao.findByNameAndIndex(text_toFind.getText(), page);
+				if (doctor == null) {
+					lblNotFound.setVisible(true);
+					lblName.setVisible(false);
+					lblMobile.setVisible(false);
+				}
+				else {
+					lblNotFound.setVisible(false);
+					lblName.setText(doctor.getDoctor_name());
+					lblName.setVisible(true);
+					lblMobile.setText(doctor.getDoctor_mobile());
+					lblMobile.setVisible(true);
+				}
+				lblPage.setText(Integer.toString(page));
+			}
+		});
+		btnNext.setText(">");
+		btnNext.setBounds(417, 398, 33, 24);
+		
 		Button btnLink = new Button(shell, SWT.NONE);
 		btnLink.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -149,7 +209,7 @@ public class DocList {
 				messageBox.open();
 			}
 		});
-		btnLink.setBounds(312, 357, 130, 34);
+		btnLink.setBounds(320, 455, 130, 34);
 		btnLink.setText("\u5173\u8054");
 		
 		Button btnBack = new Button(shell, SWT.NONE);
