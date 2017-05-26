@@ -4,6 +4,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import experi.dao.DoctorDao;
+import experi.dao.PatientDao;
+import experi.entity.Doctor;
+import experi.entity.Patient;
+
 import java.awt.Toolkit;
 
 import org.eclipse.swt.SWT;
@@ -24,6 +29,8 @@ public class PatSelfDoc {
 	private Text txtAdvice;
 	private Text textMessage;
 	private Text textSendMessage;
+	
+	protected String pat_id;
 
 	/**
 	 * Launch the application.
@@ -36,6 +43,14 @@ public class PatSelfDoc {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public PatSelfDoc() {
+		
+	}
+	
+	public PatSelfDoc(String pat_id) {
+		this.pat_id = pat_id;
 	}
 
 	/**
@@ -57,6 +72,12 @@ public class PatSelfDoc {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
+		PatientDao patientDao = new PatientDao();
+		Patient patient = patientDao.findById(pat_id);
+		
+		DoctorDao doctorDao = new DoctorDao();
+		Doctor doctor = doctorDao.findById(patient.getDoc_id());
+		
 		shell = new Shell();
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		shell.setSize(800, 600);
@@ -72,7 +93,7 @@ public class PatSelfDoc {
 		lblName.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 14, SWT.NORMAL));
 		lblName.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		lblName.setBounds(422, 41, 209, 49);
-		lblName.setText("\u533B\u751F\uFF1AName");
+		lblName.setText("医生:" + doctor.getDoctor_name());
 		
 		/*
 		Canvas canvasPhoto = new Canvas(shell, SWT.NONE);
@@ -85,7 +106,8 @@ public class PatSelfDoc {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				display.close();
-				PatMain.main(null);
+				PatMain patMain = new PatMain(patient.getPat_mobile());
+				patMain.open();
 			}
 		});
 		btnBack.setBounds(665, 475, 76, 34);
@@ -105,12 +127,14 @@ public class PatSelfDoc {
 		lblTencent.setBounds(389, 233, 269, 29);
 		lblTencent.setVisible(false);
 		
+		/*
 		Label lblAddress = new Label(shell, SWT.NONE);
 		lblAddress.setText("\u5730\u5740\uFF1A\u6D59\u6C5F\u7701\u676D\u5DDE\u5E02**\u8DEF");
 		lblAddress.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 10, SWT.NORMAL));
 		lblAddress.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		lblAddress.setBounds(389, 304, 269, 29);
 		lblAddress.setVisible(false);
+		*/
 		
 		txtAdvice = new Text(shell, SWT.BORDER);
 		txtAdvice.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
@@ -164,7 +188,7 @@ public class PatSelfDoc {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				MessageBox messageBox = new MessageBox(shell);
-				messageBox.setMessage("���ֳɹ�");
+				messageBox.setMessage("评分成功");
 				messageBox.open();
 			}
 		});
@@ -178,7 +202,7 @@ public class PatSelfDoc {
 			public void widgetSelected(SelectionEvent e) {
 				lblPhone.setVisible(true);
 				lblTencent.setVisible(true);
-				lblAddress.setVisible(true);
+				//lblAddress.setVisible(true);
 				txtAdvice.setVisible(false);
 				textMessage.setVisible(false);
 				textSendMessage.setVisible(false);
@@ -199,7 +223,7 @@ public class PatSelfDoc {
 			public void widgetSelected(SelectionEvent e) {
 				lblPhone.setVisible(false);
 				lblTencent.setVisible(false);
-				lblAddress.setVisible(false);
+				//lblAddress.setVisible(false);
 				txtAdvice.setVisible(true);
 				textMessage.setVisible(false);
 				textSendMessage.setVisible(false);
@@ -220,7 +244,7 @@ public class PatSelfDoc {
 			public void widgetSelected(SelectionEvent e) {
 				lblPhone.setVisible(false);
 				lblTencent.setVisible(false);
-				lblAddress.setVisible(false);
+				//lblAddress.setVisible(false);
 				txtAdvice.setVisible(false);
 				textMessage.setVisible(true);
 				textSendMessage.setVisible(true);
@@ -241,7 +265,7 @@ public class PatSelfDoc {
 			public void widgetSelected(SelectionEvent e) {
 				lblPhone.setVisible(false);
 				lblTencent.setVisible(false);
-				lblAddress.setVisible(false);
+				//lblAddress.setVisible(false);
 				txtAdvice.setVisible(false);
 				textMessage.setVisible(false);
 				textSendMessage.setVisible(false);
@@ -262,7 +286,7 @@ public class PatSelfDoc {
 			public void widgetSelected(SelectionEvent e) {
 				lblPhone.setVisible(false);
 				lblTencent.setVisible(false);
-				lblAddress.setVisible(false);
+				//lblAddress.setVisible(false);
 				txtAdvice.setVisible(false);
 				textMessage.setVisible(false);
 				textSendMessage.setVisible(false);
