@@ -31,7 +31,7 @@ public class PatInfo {
 	private Text textNotes;
 	private String pat_id;
 	private int index;
-	private int INIT;
+	//private int INIT;
 
 	/**
 	 * Launch the application.
@@ -78,7 +78,7 @@ public class PatInfo {
 		
 		PressureDao pressureDao = new PressureDao();
 		int pressureNum = pressureDao.countPatPressure(pat_id);
-		INIT = pressureNum - 1;
+		//INIT = pressureNum - 1;
 		
 		shell = new Shell();
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -225,7 +225,7 @@ public class PatInfo {
 		btnInfo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				index = INIT;
+				index = pressureNum - 1;
 				lblAge.setVisible(true);
 				lblWeight.setVisible(true);
 				lblFamilialDisease.setVisible(true);
@@ -293,7 +293,7 @@ public class PatInfo {
 					lblRecordTime0.setText(pressure.getPressure_RecordTime());
 				}
 				
-				index = INIT;
+				index = pressureNum - 1;
 				
 				lblPage.setText(Integer.toString(index));
 				
@@ -351,7 +351,7 @@ public class PatInfo {
 		btnMessage.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				index = INIT;
+				index = pressureNum - 1;
 				lblPage.setText(Integer.toString(index));
 				lblAge.setVisible(false);
 				lblWeight.setVisible(false);
@@ -382,7 +382,7 @@ public class PatInfo {
 		btnAdvice.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				index = INIT;
+				index = pressureNum - 1;
 				lblPage.setText(Integer.toString(index));
 				lblAge.setVisible(false);
 				lblWeight.setVisible(false);
@@ -413,7 +413,7 @@ public class PatInfo {
 		btnNote.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				index = INIT;
+				index = pressureNum - 1;
 				lblPage.setText(Integer.toString(index));
 				lblAge.setVisible(false);
 				lblWeight.setVisible(false);
