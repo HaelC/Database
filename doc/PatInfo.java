@@ -78,7 +78,7 @@ public class PatInfo {
 		
 		PressureDao pressureDao = new PressureDao();
 		int pressureNum = pressureDao.countPatPressure(pat_id);
-		//INIT = pressureNum - 1;
+		INIT = pressureNum - 1;
 		
 		shell = new Shell();
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
