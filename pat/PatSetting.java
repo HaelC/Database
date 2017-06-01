@@ -5,11 +5,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import experi.dao.PatientDao;
-import experi.dao.PressureDao;
+//import experi.dao.PressureDao;
 import experi.entity.Patient;
-import experi.entity.Pressure;
+//import experi.entity.Pressure;
 
 import java.awt.Toolkit;
+//import java.sql.Timestamp;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
@@ -18,7 +19,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Combo;
+//import org.eclipse.swt.widgets.Combo;
 
 public class PatSetting {
 
@@ -29,11 +30,12 @@ public class PatSetting {
 	private Text textQQ;
 	protected String pat_id;
 	private Text textWeight;
-	private Text textDiastolic;
-	private Text textSystolic;
+//	private Text textSystolic;
+//	private Text textDiastolic;
 	private Text textFamilialDisease;
 	private Text textHistoryDisease;
 	private Text textMobile;
+	private Text textAge;
 
 	/**
 	 * Launch the application.
@@ -78,7 +80,7 @@ public class PatSetting {
 		PatientDao patientDao = new PatientDao();
 		Patient patient = patientDao.findByIdComplete(pat_id);
 		//PressureDao pressureDao = new PressureDao();
-		//Pressure pressure = pressureDao.findByPatID(pat_id);
+		//Pressure pressure = pressureDao.findByPatIDLatest(pat_id);
 		
 		shell = new Shell();
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -93,13 +95,13 @@ public class PatSetting {
 		
 		Label lblName = new Label(shell, SWT.NONE);
 		lblName.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
-		lblName.setBounds(153, 62, 65, 24);
+		lblName.setBounds(153, 107, 65, 24);
 		lblName.setText("\u59D3\u540D");
 		
 		Label lblHeight = new Label(shell, SWT.NONE);
 		lblHeight.setText("\u8EAB\u9AD8");
 		lblHeight.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
-		lblHeight.setBounds(153, 118, 65, 24);
+		lblHeight.setBounds(153, 170, 65, 24);
 		
 		Label lblQQ = new Label(shell, SWT.NONE);
 		lblQQ.setText("QQ");
@@ -107,12 +109,12 @@ public class PatSetting {
 		lblQQ.setBounds(153, 295, 65, 24);
 		
 		textName = new Text(shell, SWT.BORDER);
-		textName.setBounds(240, 59, 113, 30);
+		textName.setBounds(240, 104, 113, 30);
 		if(patient.getPat_name() != null)
 			textName.setText(patient.getPat_name());
 		
 		textHeight = new Text(shell, SWT.BORDER);
-		textHeight.setBounds(240, 115, 82, 30);
+		textHeight.setBounds(240, 167, 82, 30);
 		if(patient.getPat_height() != null) 
 			textHeight.setText(patient.getPat_height());
 		
@@ -121,69 +123,54 @@ public class PatSetting {
 		if(patient.getPat_QQ() != null)
 			textQQ.setText(patient.getPat_QQ());
 		
-		Button btnSubmit = new Button(shell, SWT.NONE);
-		btnSubmit.addSelectionListener(new SelectionAdapter() {
-			
-			public void widgetSelected(SelectionEvent e) {
-				MessageBox messageBox = new MessageBox(shell);
-				messageBox.setMessage("提交成功");
-				messageBox.open();
-			}
-		});
-		btnSubmit.setBounds(263, 428, 90, 34);
-		btnSubmit.setText("\u63D0\u4EA4");
-		
-		Button btnBack = new Button(shell, SWT.NONE);
-		btnBack.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				display.close();
-				//PatMain.main(null);
-				PatMain patMain = new PatMain(patient.getPat_mobile());
-				patMain.open();
-			}
-		});
-		btnBack.setText("\u8FD4\u56DE");
-		btnBack.setBounds(422, 428, 90, 34);
-		
 		Label lblAge = new Label(shell, SWT.NONE);
 		lblAge.setText("\u5E74\u9F84");
 		lblAge.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
-		lblAge.setBounds(409, 62, 65, 24);
+		lblAge.setBounds(409, 107, 65, 24);
 		
 		Label lblWeight = new Label(shell, SWT.NONE);
 		lblWeight.setText("\u4F53\u91CD");
 		lblWeight.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
-		lblWeight.setBounds(409, 118, 65, 24);
+		lblWeight.setBounds(409, 170, 65, 24);
 		
 		textWeight = new Text(shell, SWT.BORDER);
-		textWeight.setBounds(499, 115, 82, 30);
+		textWeight.setBounds(499, 167, 82, 30);
 		if(patient.getPat_weight() != null)
 			textWeight.setText(patient.getPat_weight());
 		
+		/*
 		Label lblDiastolic = new Label(shell, SWT.NONE);
-		lblDiastolic.setText("\u8212\u5F20\u538B");
+		lblDiastolic.setText("\u6536\u7F29\u538B");
 		lblDiastolic.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		lblDiastolic.setBounds(153, 176, 65, 24);
 		
 		Label lblSystolic = new Label(shell, SWT.NONE);
-		lblSystolic.setText("\u4F38\u7F29\u538B");
+		lblSystolic.setText("\u8212\u5F20\u538B");
 		lblSystolic.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		lblSystolic.setBounds(409, 176, 65, 24);
 		
-		textDiastolic = new Text(shell, SWT.BORDER);
-		textDiastolic.setBounds(240, 173, 113, 30);
-		//if(pressure != null)textDiastolic.setText(pressure.getPressure_Diastolic());
-		
 		textSystolic = new Text(shell, SWT.BORDER);
-		textSystolic.setBounds(499, 173, 113, 30);
-		//if(pressure != null)textSystolic.setText(pressure.getPressure_Systolic());
+		textSystolic.setBounds(240, 173, 113, 30);
+		if(pressure != null)
+			textSystolic.setText(pressure.getPressure_Systolic());
 		
+		textDiastolic = new Text(shell, SWT.BORDER);
+		textDiastolic.setBounds(499, 173, 113, 30);
+		if(pressure != null)
+			textDiastolic.setText(pressure.getPressure_Diastolic());
+		*/	
+		
+		/*
 		Combo age = new Combo(shell, SWT.NONE);
 		age.setBounds(499, 59, 113, 32);
 		age.setItems("0-30岁","31-40岁","41-50岁","51-60岁","61-70岁","71-80岁","80岁以上");
 		if(patient.getPat_age() != null)
 			age.setText(patient.getPat_age());
+		*/
+		textAge = new Text(shell, SWT.BORDER);
+		textAge.setBounds(499, 104, 82, 30);
+		if(patient.getPat_age() != null)
+			textAge.setText(patient.getPat_age());
 		
 		Label lblFamilialDisease = new Label(shell, SWT.NONE);
 		lblFamilialDisease.setText("\u5BB6\u65CF\u75BE\u75C5");
@@ -217,13 +204,60 @@ public class PatSetting {
 		
 		Label lblMeter = new Label(shell, SWT.NONE);
 		lblMeter.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
-		lblMeter.setBounds(328, 118, 25, 24);
+		lblMeter.setBounds(328, 170, 25, 24);
 		lblMeter.setText("m");
 		
 		Label lblKilogram = new Label(shell, SWT.NONE);
 		lblKilogram.setText("kg");
 		lblKilogram.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
-		lblKilogram.setBounds(587, 118, 25, 24);
+		lblKilogram.setBounds(587, 170, 25, 24);
+		
+		Button btnSubmit = new Button(shell, SWT.NONE);
+		btnSubmit.addSelectionListener(new SelectionAdapter() {
+			
+			public void widgetSelected(SelectionEvent e) {
+				patient.setPat_name(textName.getText());
+				patient.setPat_age(textAge.getText());
+				patient.setPat_height(textHeight.getText());
+				patient.setPat_weight(textWeight.getText());
+				patient.setPat_familialDisease(textFamilialDisease.getText());
+				patient.setPat_historyDisease(textHistoryDisease.getText());
+				patient.setPat_QQ(textQQ.getText());
+				patientDao.setPatient(patient);
+				/*
+				Pressure pressure = new Pressure();
+				pressure.setPat_id(pat_id);
+				pressure.setPressure_Diastolic(textSystolic.getText());
+				pressure.setPressure_Systolic(textDiastolic.getText());
+				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+				pressure.setPressure_RecordTime(timestamp.toString());
+				pressureDao.insertPressure(pressure);
+				*/
+				MessageBox messageBox = new MessageBox(shell);
+				messageBox.setMessage("提交成功");
+				messageBox.open();
+				display.close();
+				PatMain patMain = new PatMain(patient.getPat_mobile());
+				patMain.open();
+			}
+		});
+		btnSubmit.setBounds(263, 428, 90, 34);
+		btnSubmit.setText("\u63D0\u4EA4");
+		
+		Button btnBack = new Button(shell, SWT.NONE);
+		btnBack.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				display.close();
+				//PatMain.main(null);
+				PatMain patMain = new PatMain(patient.getPat_mobile());
+				patMain.open();
+			}
+		});
+		btnBack.setText("\u8FD4\u56DE");
+		btnBack.setBounds(422, 428, 90, 34);
+		
+		
 
 	}
 }
