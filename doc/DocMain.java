@@ -5,6 +5,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
+//import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Label;
 
 import java.awt.Toolkit;
@@ -12,7 +13,9 @@ import java.awt.Toolkit;
 //import com.ibm.icu.text.SimpleDateFormat;
 
 import experi.dao.DoctorDao;
+//import experi.dao.PatientDao;
 import experi.entity.Doctor;
+import experi.entity.Patient;
 
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -107,20 +110,32 @@ public class DocMain {
 		menuPatient.setMenu(menu_Patient);
 		
 		MenuItem menuName = new MenuItem(menu_Patient, SWT.CASCADE);
-		menuName.setText("\u60A3\u8005\u59D3\u540D");
+		menuName.setText("\u60A3\u8005\u4E00\u89C8");
 		
 		Menu menu_Name = new Menu(menuName);
 		menuName.setMenu(menu_Name);
 		
-		MenuItem menuSample1 = new MenuItem(menu_Name, SWT.NONE);
-		menuSample1.addSelectionListener(new SelectionAdapter() {
-			
-			public void widgetSelected(SelectionEvent e) {
-				display.close();
-				PatInfo.main(null);
+		int patientNum = doctorDao.countYourPatients(doctor.getDoctor_id());
+		
+		if (patientNum == 0) {
+			MenuItem menuItem = new MenuItem(menu_Name, SWT.NONE);
+			menuItem.setText("目前还没有患者关联您");
+		}
+		else {
+			for (int i = 0; i < patientNum; ++i) {
+				MenuItem menuItem = new MenuItem(menu_Name, SWT.NONE);
+				Patient patient = doctorDao.findYourPatients(doctor.getDoctor_id(), i);
+				menuItem.addSelectionListener(new SelectionAdapter() {
+					
+					public void widgetSelected(SelectionEvent e) {
+						display.close();
+						PatInfo patInfo = new PatInfo(patient.getPat_id());
+						patInfo.open();
+					}
+				});
+				menuItem.setText(patient.getPat_name());
 			}
-		});
-		menuSample1.setText("Sample1");
+		}
 		
 		MenuItem menuSchedule = new MenuItem(menu, SWT.CASCADE);
 		menuSchedule.setText("\u65E5\u7A0B\u5B89\u6392");
@@ -141,10 +156,26 @@ public class DocMain {
 		menuSetting.setMenu(menu_Setting);
 		
 		MenuItem menuSelfInfo = new MenuItem(menu_Setting, SWT.NONE);
+		menuSelfInfo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				display.close();
+				DocSetting docSetting = new DocSetting(doctor.getDoctor_id());
+				docSetting.open();
+			}
+		});
 		menuSelfInfo.setText("\u4E2A\u4EBA\u4FE1\u606F");
 		
-		MenuItem menuHomePage = new MenuItem(menu_Setting, SWT.NONE);
-		menuHomePage.setText("\u4E3B\u9875\u8D44\u6599");
+		MenuItem menuChangePassword = new MenuItem(menu_Setting, SWT.NONE);
+		menuChangePassword.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				display.close();
+				DocPassword docPassword = new DocPassword(doctor.getDoctor_id());
+				docPassword.open();
+			}
+		});
+		menuChangePassword.setText("\u4FEE\u6539\u5BC6\u7801");
 		
 		MenuItem menuAbout = new MenuItem(menu, SWT.CASCADE);
 		menuAbout.setText("\u5173\u4E8E");
