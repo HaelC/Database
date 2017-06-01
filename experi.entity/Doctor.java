@@ -6,6 +6,8 @@ public class Doctor {
 	private String doctor_name;
 	private String password;
 	private String doc_mobile;
+	private String doc_phone;
+	private String doc_QQ;
 	
 	private boolean work_Mon;
 	private boolean work_Tue;
@@ -33,9 +35,26 @@ public class Doctor {
 		this.work_Fri = work_Fri;
 		this.work_Sat = work_Sat;
 		this.work_Sun = work_Sun;
-		
-		
 	}
+	public Doctor(String doctor_id, String doctor_name, String doc_mobile, String password,
+			boolean work_Mon, boolean work_Tue, boolean work_Wed, boolean work_Thu, boolean work_Fri, boolean work_Sat, boolean work_Sun,
+			String doc_phone, String doc_QQ) {
+		super();
+		this.doctor_id = doctor_id;
+		this.doctor_name = doctor_name;
+		this.doc_mobile = doc_mobile;
+		this.password = password;
+		this.work_Mon = work_Mon;
+		this.work_Tue = work_Tue;
+		this.work_Wed = work_Wed;
+		this.work_Thu = work_Thu;
+		this.work_Fri = work_Fri;
+		this.work_Sat = work_Sat;
+		this.work_Sun = work_Sun;
+		this.doc_phone = doc_phone;
+		this.doc_QQ = doc_QQ;
+	}
+	
 	public String getDoctor_id() {
 		return doctor_id;
 	}
@@ -69,6 +88,9 @@ public class Doctor {
 			return "";
 		}
 	}
+	public boolean getWorkOnMon() {
+		return work_Mon;
+	}
 	public void setWorkOnMon(boolean work_Mon) {
 		this.work_Mon = work_Mon;
 	}
@@ -79,6 +101,9 @@ public class Doctor {
 		else {
 			return "";
 		}
+	}
+	public boolean getWorkOnTue() {
+		return work_Tue;
 	}
 	public void setWorkOnTue(boolean work_Tue) {
 		this.work_Tue = work_Tue;
@@ -91,6 +116,9 @@ public class Doctor {
 			return "";
 		}
 	}
+	public boolean getWorkOnWed() {
+		return work_Wed;
+	}
 	public void setWorkOnWed(boolean work_Wed) {
 		this.work_Wed = work_Wed;
 	}
@@ -101,6 +129,9 @@ public class Doctor {
 		else {
 			return "";
 		}
+	}
+	public boolean getWorkOnThu() {
+		return work_Thu;
 	}
 	public void setWorkOnThu(boolean work_Thu) {
 		this.work_Thu = work_Thu;
@@ -113,6 +144,9 @@ public class Doctor {
 			return "";
 		}
 	}
+	public boolean getWorkOnFri() {
+		return work_Fri;
+	}
 	public void setWorkOnFri(boolean work_Fri) {
 		this.work_Fri = work_Fri;
 	}
@@ -123,6 +157,9 @@ public class Doctor {
 		else {
 			return "";
 		}
+	}
+	public boolean getWorkOnSat() {
+		return work_Sat;
 	}
 	public void setWorkOnSat(boolean work_Sat) {
 		this.work_Sat = work_Sat;
@@ -135,11 +172,27 @@ public class Doctor {
 			return "";
 		}
 	}
+	public boolean getWorkOnSun() {
+		return work_Sun;
+	}
 	public void setWorkOnSun(boolean work_Sun) {
 		this.work_Sun = work_Sun;
 	}
 	
 	public String getWorkTime() {
 		return (workOnMon() + workOnTue() + workOnWed() + workOnThu() + workOnFri() + workOnSat() + workOnSun());
+	}
+	
+	public String getDoc_phone() {
+		return doc_phone;
+	}
+	public void setDoc_phone(String doc_phone) {
+		this.doc_phone = doc_phone;
+	}
+	public String getDoc_QQ() {
+		return doc_QQ;
+	}
+	public void setDoc_QQ(String doc_QQ) {
+		this.doc_QQ = doc_QQ;
 	}
 }
