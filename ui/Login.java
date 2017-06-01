@@ -4,12 +4,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import experi.dao.DoctorDao;
-import experi.entity.Doctor;
+//import experi.dao.DoctorDao;
+//import experi.entity.Doctor;
 
 import java.awt.Toolkit;
 
-import javax.xml.soap.Text;
+//import javax.xml.soap.Text;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
