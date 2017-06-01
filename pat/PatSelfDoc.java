@@ -4,17 +4,24 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import experi.dao.AppointmentDao;
 import experi.dao.DoctorDao;
 import experi.dao.PatientDao;
+import experi.dao.RateDao;
 import experi.entity.Doctor;
 import experi.entity.Patient;
+import experi.entity.Rate;
+import experi.entity.Appointment;
 
 import java.awt.Toolkit;
+import java.sql.Timestamp;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Text;
@@ -31,6 +38,7 @@ public class PatSelfDoc {
 	private Text textSendMessage;
 	
 	protected String pat_id;
+	private Text textApmtNote;
 
 	/**
 	 * Launch the application.
@@ -117,7 +125,7 @@ public class PatSelfDoc {
 		lblPhone.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 10, SWT.NORMAL));
 		lblPhone.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		lblPhone.setBounds(389, 153, 269, 29);
-		lblPhone.setText("\u8054\u7CFB\u7535\u8BDD\uFF1A18888888888");
+		lblPhone.setText("\u8054\u7CFB\u7535\u8BDD\uFF1A" + doctor.getDoctor_mobile());
 		lblPhone.setVisible(false);
 		
 		Label lblTencent = new Label(shell, SWT.NONE);
@@ -159,12 +167,32 @@ public class PatSelfDoc {
 		btnSend.setText("\u53D1\u9001");
 		btnSend.setVisible(false);
 		
+		textApmtNote = new Text(shell, SWT.BORDER);
+		textApmtNote.setText("\u5907\u6CE8");
+		textApmtNote.setForeground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
+		textApmtNote.setBounds(389, 153, 269, 152);
+		textApmtNote.setVisible(false);
+		
 		DateTime dateTime = new DateTime(shell, SWT.BORDER);
-		dateTime.setBounds(389, 244, 135, 33);
+		dateTime.setBounds(389, 350, 135, 33);
 		dateTime.setVisible(false);
 		
 		Button btnSubmit = new Button(shell, SWT.NONE);
-		btnSubmit.setBounds(544, 244, 114, 34);
+		btnSubmit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				AppointmentDao appointmentDao = new AppointmentDao();
+				//Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+				//Rate rate = new Rate(pat_id, patient.getDoc_id(), scaleScore.getSelection(), timestamp.toString());
+				//rateDao.insertRate(rate);
+				Appointment appointment = new Appointment(patient.getDoc_id(), pat_id, dateTime.toString(), textApmtNote.getText());
+				appointmentDao.insertAppointment(appointment);
+				MessageBox messageBox = new MessageBox(shell);
+				messageBox.setMessage("预约成功");
+				messageBox.open();
+			}
+		});
+		btnSubmit.setBounds(544, 350, 114, 34);
 		btnSubmit.setText("\u9884\u7EA6");
 		btnSubmit.setVisible(false);
 		
@@ -187,6 +215,10 @@ public class PatSelfDoc {
 		btnRate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				RateDao rateDao = new RateDao();
+				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+				Rate rate = new Rate(pat_id, patient.getDoc_id(), scaleScore.getSelection(), timestamp.toString());
+				rateDao.insertRate(rate);
 				MessageBox messageBox = new MessageBox(shell);
 				messageBox.setMessage("评分成功");
 				messageBox.open();
@@ -206,6 +238,7 @@ public class PatSelfDoc {
 				txtAdvice.setVisible(false);
 				textMessage.setVisible(false);
 				textSendMessage.setVisible(false);
+				textApmtNote.setVisible(false);
 				dateTime.setVisible(false);
 				btnSend.setVisible(false);
 				btnSubmit.setVisible(false);
@@ -227,6 +260,7 @@ public class PatSelfDoc {
 				txtAdvice.setVisible(true);
 				textMessage.setVisible(false);
 				textSendMessage.setVisible(false);
+				textApmtNote.setVisible(false);
 				dateTime.setVisible(false);
 				btnSend.setVisible(false);
 				btnSubmit.setVisible(false);
@@ -248,6 +282,7 @@ public class PatSelfDoc {
 				txtAdvice.setVisible(false);
 				textMessage.setVisible(true);
 				textSendMessage.setVisible(true);
+				textApmtNote.setVisible(false);
 				dateTime.setVisible(false);
 				btnSend.setVisible(true);
 				btnSubmit.setVisible(false);
@@ -269,6 +304,26 @@ public class PatSelfDoc {
 				txtAdvice.setVisible(false);
 				textMessage.setVisible(false);
 				textSendMessage.setVisible(false);
+				textApmtNote.setVisible(true);
+				textApmtNote.addFocusListener(new FocusListener() {
+					
+					@Override
+					public void focusLost(FocusEvent arg0) {
+						// TODO Auto-generated method stub
+						if(textApmtNote.getText().equals("")) {
+							textApmtNote.setText("备注");
+							textApmtNote.setForeground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
+						}
+					}
+					
+					@Override
+					public void focusGained(FocusEvent arg0) {
+						// TODO Auto-generated method stub
+						textApmtNote.setText("");
+						textApmtNote.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+						
+					}
+				});
 				dateTime.setVisible(true);
 				btnSend.setVisible(false);
 				btnSubmit.setVisible(true);
@@ -290,6 +345,7 @@ public class PatSelfDoc {
 				txtAdvice.setVisible(false);
 				textMessage.setVisible(false);
 				textSendMessage.setVisible(false);
+				textApmtNote.setVisible(false);
 				dateTime.setVisible(false);
 				btnSend.setVisible(false);
 				btnSubmit.setVisible(false);
@@ -300,6 +356,8 @@ public class PatSelfDoc {
 		});
 		btnReview.setBounds(135, 420, 114, 34);
 		btnReview.setText("\u8BC4\u4EF7\u533B\u751F");
+		
+		
 		
 		
 		
