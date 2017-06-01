@@ -62,6 +62,27 @@ public class PatientDao extends BaseDao{
 			e.printStackTrace();
 		}
 	}
+	
+	public void changePatientPassword(Patient patient){
+		getJdbcTemplate();
+		try{
+		String sql="update patient set pat_password=? where pat_id=?";
+		jdbcTemplate.update(sql,new Object[]{patient.getPassword(),patient.getPat_id()});
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void setPatient(Patient patient) {
+		getJdbcTemplate();
+		try{
+		String sql="update patient set pat_name=?, pat_age=?, pat_height=?, pat_weight=?, pat_familialDisease=?, pat_historyDisease=?, pat_QQ=? where pat_id=?";
+		jdbcTemplate.update(sql,new Object[]{patient.getPat_name(), patient.getPat_age(), patient.getPat_height(), patient.getPat_weight(), patient.getPat_familialDisease(), patient.getPat_historyDisease(),patient.getPat_QQ(),patient.getPat_id()});
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * 删除
 	 * @param patient
@@ -201,6 +222,7 @@ public class PatientDao extends BaseDao{
 					patient.setPat_name(set.getString("pat_name"));
 					patient.setPassword(set.getString("pat_password"));
 					patient.setPat_mobile(set.getString("pat_mobile"));
+					patient.setPat_sex(set.getString("pat_sex"));
 					patient.setDoc_id(set.getString("doc_id"));
 					patient.setPat_age(set.getString("pat_age"));
 					patient.setPat_height(set.getString("pat_height"));
