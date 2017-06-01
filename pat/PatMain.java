@@ -149,6 +149,28 @@ public class PatMain {
 			}
 		});
 		menuSelfInfo.setText("\u4E2A\u4EBA\u4FE1\u606F");
+		
+		MenuItem menuUpdatePressure = new MenuItem(menu_Setting, SWT.NONE);
+		menuUpdatePressure.addSelectionListener(new SelectionAdapter() {
+			
+			public void widgetSelected(SelectionEvent e) {
+				display.close();
+				PatUpdatePressure patUpdatePressure = new PatUpdatePressure(patient.getPat_id());
+				patUpdatePressure.open();
+			}
+		});
+		menuUpdatePressure.setText("\u66F4\u65B0\u8840\u538B");
+		
+		MenuItem menuPassword = new MenuItem(menu_Setting, SWT.NONE);
+		menuPassword.addSelectionListener(new SelectionAdapter() {
+			
+			public void widgetSelected(SelectionEvent e) {
+				display.close();
+				PatPassword patPassword = new PatPassword(patient.getPat_id());
+				patPassword.open();
+			}
+		});
+		menuPassword.setText("\u4FEE\u6539\u5BC6\u7801");
 		/*
 		MenuItem menuHomePage = new MenuItem(menu_Setting, SWT.NONE);
 		menuHomePage.setText("\u4E3B\u9875\u8D44\u6599");
