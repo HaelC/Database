@@ -1,6 +1,6 @@
 package experi.entity;
 
-import java.sql.Timestamp;
+//import java.sql.Timestamp;
 
 public class Pressure {
 	
@@ -8,13 +8,13 @@ public class Pressure {
 	private String pat_id;
 	private String pressure_Systolic;
 	private String pressure_Diastolic;
-	private Timestamp pressure_RecordTime;
+	private String pressure_RecordTime;
 	
 	public Pressure() {
 		super();
 	}
 	
-	public Pressure(String pressure_id, String pat_id, String pressure_Systolic, String pressure_Diastolic, Timestamp pressure_RecordTime) {
+	public Pressure(String pressure_id, String pat_id, String pressure_Systolic, String pressure_Diastolic, String pressure_RecordTime) {
 		this.pressure_id = pressure_id;
 		this.pat_id = pat_id;
 		this.pressure_Systolic = pressure_Systolic;
@@ -46,10 +46,10 @@ public class Pressure {
 	public void setPressure_Diastolic(String pressure_Diastolic) {
 		this.pressure_Diastolic = pressure_Diastolic;
 	}
-	public Timestamp getPressure_RecordTime() {
+	public String getPressure_RecordTime() {
 		return pressure_RecordTime;
 	}
-	public void setPressure_RecordTime(Timestamp pressure_Record_Time) {
+	public void setPressure_RecordTime(String pressure_Record_Time) {
 		this.pressure_RecordTime = pressure_Record_Time;
 	}
 }
