@@ -6,16 +6,18 @@ public class Message {
 	private String pat_id;
 	private String mes_text;
 	private String mes_time;
+	private int mes_sentByDoc;
 	
 	public Message() {
 		super();
 	}
 	
-	public Message(String doc_id, String pat_id, String mes_text, String mes_time) {
+	public Message(String doc_id, String pat_id, String mes_text, String mes_time, int mes_sentByDoc) {
 		this.doc_id = doc_id;
 		this.pat_id = pat_id;
 		this.mes_text = mes_text;
 		this.mes_time = mes_time;
+		this.mes_sentByDoc = mes_sentByDoc;
 	}
 	
 	public String getDoc_id() {
@@ -41,5 +43,11 @@ public class Message {
 	}
 	public void setMes_time(String mes_time) {
 		this.mes_time = mes_time;
+	}
+	public int getMes_sentByDoc() {
+		return mes_sentByDoc;
+	}
+	public void setMes_sentByDoc(int mes_sentByDoc) {
+		this.mes_sentByDoc = mes_sentByDoc;
 	}
 }
