@@ -221,14 +221,14 @@ public class DoctorDao extends BaseDao {
 	public Doctor findByNameAndIndex(String doc_name, int index){
 		getJdbcTemplate();
 		try{
-			String sql="select * from dbo.Doctor where doc_name=?";
-			List query = jdbcTemplate.query(sql, new Object[]{doc_name}, new RowMapper() {
+			String sql="select * from dbo.Doctor where doc_name like ?";
+			List query = jdbcTemplate.query(sql, new Object[]{"%" + doc_name + "%"}, new RowMapper() {
 				@Override
 				public Object mapRow(ResultSet set, int rownum)
 						throws SQLException {
 					Doctor doctor=new Doctor();
 					doctor.setDoctor_id(set.getString("doc_id"));
-					doctor.setDoctor_name(doc_name);
+					doctor.setDoctor_name(set.getString("doc_name"));
 					//doctor.setPassword(set.getString("doc_password"));
 					doctor.setMobile(set.getString("doc_mobile"));
 					String workday= set.getString("doc_workday");
