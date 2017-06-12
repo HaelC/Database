@@ -63,6 +63,16 @@ public class PatientDao extends BaseDao{
 		}
 	}
 	
+	public void cancelPatient(Patient patient){
+		getJdbcTemplate();
+		try{
+		String sql="update patient set doc_id=? where pat_id=?";
+		jdbcTemplate.update(sql,new Object[]{null,patient.getPat_id()});
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 	public void changePatientPassword(Patient patient){
 		getJdbcTemplate();
 		try{
