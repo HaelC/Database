@@ -4,17 +4,25 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import com.ibm.icu.text.SimpleDateFormat;
+
 import experi.dao.AppointmentDao;
 import experi.dao.DoctorDao;
+import experi.dao.MessageDao;
 import experi.dao.PatientDao;
 import experi.dao.RateDao;
+import experi.dao.SuggestionDao;
 import experi.entity.Doctor;
+import experi.entity.Message;
 import experi.entity.Patient;
 import experi.entity.Rate;
+import experi.entity.Suggestion;
 import experi.entity.Appointment;
 
 import java.awt.Toolkit;
+//import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -25,6 +33,7 @@ import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Text;
+//import org.eclipse.ui.internal.handlers.WizardHandler.New;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Scale;
 
@@ -84,7 +93,10 @@ public class PatSelfDoc {
 		Patient patient = patientDao.findById(pat_id);
 		
 		DoctorDao doctorDao = new DoctorDao();
-		Doctor doctor = doctorDao.findById(patient.getDoc_id());
+		Doctor doctor = doctorDao.findByIdComplete(patient.getDoc_id());
+		
+		MessageDao messageDao = new MessageDao();
+		SuggestionDao suggestionDao = new SuggestionDao();
 		
 		shell = new Shell();
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -129,7 +141,10 @@ public class PatSelfDoc {
 		lblPhone.setVisible(false);
 		
 		Label lblTencent = new Label(shell, SWT.NONE);
-		lblTencent.setText("QQ/\u5FAE\u4FE1\uFF1A000000000");
+		lblTencent.setText("QQ/\u5FAE\u4FE1\uFF1A");
+		if(doctor.getDoc_QQ() != null) {
+			lblTencent.setText("QQ/\u5FAE\u4FE1\uFF1A" + doctor.getDoc_QQ());
+		}
 		lblTencent.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 10, SWT.NORMAL));
 		lblTencent.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		lblTencent.setBounds(389, 233, 269, 29);
@@ -144,30 +159,108 @@ public class PatSelfDoc {
 		lblAddress.setVisible(false);
 		*/
 		
-		txtAdvice = new Text(shell, SWT.BORDER);
+		Label lblWorkTime = new Label(shell, SWT.NONE);
+		lblWorkTime.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 10, SWT.NORMAL));
+		lblWorkTime.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
+		lblWorkTime.setBounds(484, 298, 183, 156);
+		lblWorkTime.setText("");
+		if (doctor.getWorkOnMon()) {
+			lblWorkTime.setText(lblWorkTime.getText() + "周一\n");
+		}
+		if (doctor.getWorkOnTue()) {
+			lblWorkTime.setText(lblWorkTime.getText() + "周二\n");
+		}
+		if (doctor.getWorkOnWed()) {
+			lblWorkTime.setText(lblWorkTime.getText() + "周三\n");
+		}
+		if (doctor.getWorkOnThu()) {
+			lblWorkTime.setText(lblWorkTime.getText() + "周四\n");
+		}
+		if (doctor.getWorkOnFri()) {
+			lblWorkTime.setText(lblWorkTime.getText() + "周五\n");
+		}
+		if (doctor.getWorkOnSat()) {
+			lblWorkTime.setText(lblWorkTime.getText() + "周六\n");
+		}
+		if (doctor.getWorkOnSun()) {
+			lblWorkTime.setText(lblWorkTime.getText() + "周日\n");
+		}
+		lblWorkTime.setVisible(false);
+		
+		Label lbl = new Label(shell, SWT.NONE);
+		lbl.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
+		lblWorkTime.setFont(SWTResourceManager.getFont("Microsoft YaHei UI", 10, SWT.NORMAL));
+		lbl.setBounds(389, 298, 90, 24);
+		lbl.setText("\u5DE5\u4F5C\u65F6\u95F4\uFF1A");
+		lbl.setVisible(false);
+		
+		txtAdvice = new Text(shell, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		txtAdvice.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		txtAdvice.setEditable(false);
-		txtAdvice.setText("\u591A\u559D\u70ED\u6C34w");
+		txtAdvice.setText("");
 		txtAdvice.setBounds(389, 129, 278, 245);
 		txtAdvice.setVisible(false);
 		
-		textMessage = new Text(shell, SWT.BORDER);
-		textMessage.setText("\u5386\u53F2\u6D88\u606F");
+		int adviceNum = suggestionDao.countSuggestions(pat_id);
+		
+		for(int i = 0; i < adviceNum; ++i) {
+			Suggestion suggestion = suggestionDao.findSuggestion(pat_id, i);
+			txtAdvice.append(suggestion.getSug_time() + ":\n" + suggestion.getSug_main() + "\n");
+		}
+		
+		textMessage = new Text(shell, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		//textMessage.setText("\u5386\u53F2\u6D88\u606F");
+		textMessage.setText("");
 		textMessage.setEditable(false);
 		textMessage.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		textMessage.setBounds(389, 129, 278, 245);
 		textMessage.setVisible(false);
 		
-		textSendMessage = new Text(shell, SWT.BORDER);
+		textSendMessage = new Text(shell, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		textSendMessage.setBounds(387, 397, 215, 57);
 		textSendMessage.setVisible(false);
 		
+		int messageNum = messageDao.countMessages(pat_id, patient.getDoc_id());
+		
+		for(int i = 0; i < messageNum; ++i) {
+			Message message = messageDao.findMessage(pat_id, patient.getDoc_id(), i);
+			//textMessage.setText(textMessage.getText() + message.getMes_time() + " ");
+			textMessage.append("\n" + message.getMes_time() + " ");
+			if(message.getMes_sentByDoc() == 0) {
+				//textMessage.setText(textMessage.getText() + "\n你: " + message.getMes_text() + "\n\n");
+				textMessage.append("\n你: " + message.getMes_text() + "\n");
+			}
+			else {
+				//textMessage.setText(textMessage.getText() + "\n医生: " + message.getMes_text() + "\n\n");
+				textMessage.append("\n医生:" + message.getMes_text() + "\n");
+			}
+			
+			//textMessage.setText(textMessage.getText() + message.getMes_text() + "\n\r");
+			
+		}
+		
+		
 		Button btnSend = new Button(shell, SWT.NONE);
+		btnSend.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+				//String time = Integer.toString(timestamp.getYear());
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String time = simpleDateFormat.format(new Date());
+				Message message = new Message(patient.getDoc_id(), pat_id, textSendMessage.getText(), time, 0);
+				
+				messageDao.sendMessage(message);
+				//textMessage.setText(textMessage.getText() + "\n" + message.getMes_time()  + "\n你: " + message.getMes_text() + "\n");
+				textMessage.append("\n" + message.getMes_time() + "\n你: " + message.getMes_text() + "\n");
+				textSendMessage.setText("");
+			}
+		});
 		btnSend.setBounds(608, 397, 59, 57);
 		btnSend.setText("\u53D1\u9001");
 		btnSend.setVisible(false);
 		
-		textApmtNote = new Text(shell, SWT.BORDER);
+		textApmtNote = new Text(shell, SWT.BORDER | SWT.MULTI | SWT.WRAP);
 		textApmtNote.setText("\u5907\u6CE8");
 		textApmtNote.setForeground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		textApmtNote.setBounds(389, 153, 269, 152);
@@ -234,6 +327,8 @@ public class PatSelfDoc {
 			public void widgetSelected(SelectionEvent e) {
 				lblPhone.setVisible(true);
 				lblTencent.setVisible(true);
+				lblWorkTime.setVisible(true);
+				lbl.setVisible(true);
 				//lblAddress.setVisible(true);
 				txtAdvice.setVisible(false);
 				textMessage.setVisible(false);
@@ -256,6 +351,8 @@ public class PatSelfDoc {
 			public void widgetSelected(SelectionEvent e) {
 				lblPhone.setVisible(false);
 				lblTencent.setVisible(false);
+				lblWorkTime.setVisible(false);
+				lbl.setVisible(false);
 				//lblAddress.setVisible(false);
 				txtAdvice.setVisible(true);
 				textMessage.setVisible(false);
@@ -278,6 +375,8 @@ public class PatSelfDoc {
 			public void widgetSelected(SelectionEvent e) {
 				lblPhone.setVisible(false);
 				lblTencent.setVisible(false);
+				lblWorkTime.setVisible(false);
+				lbl.setVisible(false);
 				//lblAddress.setVisible(false);
 				txtAdvice.setVisible(false);
 				textMessage.setVisible(true);
@@ -300,6 +399,8 @@ public class PatSelfDoc {
 			public void widgetSelected(SelectionEvent e) {
 				lblPhone.setVisible(false);
 				lblTencent.setVisible(false);
+				lblWorkTime.setVisible(false);
+				lbl.setVisible(false);
 				//lblAddress.setVisible(false);
 				txtAdvice.setVisible(false);
 				textMessage.setVisible(false);
@@ -341,6 +442,8 @@ public class PatSelfDoc {
 			public void widgetSelected(SelectionEvent e) {
 				lblPhone.setVisible(false);
 				lblTencent.setVisible(false);
+				lblWorkTime.setVisible(false);
+				lbl.setVisible(false);
 				//lblAddress.setVisible(false);
 				txtAdvice.setVisible(false);
 				textMessage.setVisible(false);
