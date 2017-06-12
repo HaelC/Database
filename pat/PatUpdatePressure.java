@@ -107,11 +107,14 @@ public class PatUpdatePressure {
 		
 
 		DateTime dateTime = new DateTime(shell, SWT.BORDER);
-		dateTime.setBounds(359, 260, 135, 33);
+		dateTime.setBounds(263, 260, 135, 33);
+		
+		DateTime dateTime_1 = new DateTime(shell, SWT.BORDER | SWT.TIME);
+		dateTime_1.setBounds(439, 260, 135, 33);
 		
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
-		lblNewLabel.setBounds(263, 269, 90, 24);
+		lblNewLabel.setBounds(153, 269, 90, 24);
 		lblNewLabel.setText("\u6D4B\u5B9A\u65F6\u95F4");
 		
 		Button btnSubmit = new Button(shell, SWT.NONE);
@@ -126,10 +129,11 @@ public class PatUpdatePressure {
 				//Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 				//pressure.setPressure_RecordTime(timestamp.toString());
 				//pressure.setPressure_RecordTime(dateTime.toString());
-				pressure.setPressure_RecordTime(Integer.toString(dateTime.getYear()) + "-" + Integer.toString(dateTime.getMonth()) + "-" + Integer.toString(dateTime.getDay()));
+				pressure.setPressure_RecordTime(Integer.toString(dateTime.getYear()) + "-" + Integer.toString(dateTime.getMonth() + 1) + "-"  +Integer.toString(dateTime.getDay()) + " " + Integer.toString(dateTime_1.getHours()) + ":" + Integer.toString(dateTime_1.getMinutes()) + ":" + Integer.toString(dateTime_1.getSeconds()));
+				
 				pressureDao.insertPressure(pressure);
 				MessageBox messageBox = new MessageBox(shell);
-				messageBox.setMessage("提交成功");
+				messageBox.setMessage("鎻愪氦鎴愬姛");
 				messageBox.open();
 				display.close();
 				PatMain patMain = new PatMain(patient.getPat_mobile());
