@@ -5,19 +5,27 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import com.ibm.icu.text.SimpleDateFormat;
+
 import experi.dao.DoctorDao;
+import experi.dao.MessageDao;
 import experi.dao.PatientDao;
 import experi.dao.PressureDao;
+import experi.dao.SuggestionDao;
 import experi.entity.Doctor;
+import experi.entity.Message;
 import experi.entity.Patient;
 import experi.entity.Pressure;
+import experi.entity.Suggestion;
 
 import java.awt.Toolkit;
+import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 //import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Text;
 
@@ -79,6 +87,8 @@ public class PatInfo {
 		PressureDao pressureDao = new PressureDao();
 		int pressureNum = pressureDao.countPatPressure(pat_id);
 		//INIT = pressureNum - 1;
+		
+		MessageDao messageDao = new MessageDao();
 		
 		shell = new Shell();
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -153,8 +163,9 @@ public class PatInfo {
 		//comboHistory.setVisible(false);
 		
 		textMessage = new Text(shell, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textMessage.setText("\u6D88\u606F\u8BB0\u5F55a\na\naaa\naaaa\naaaaaaa\naaaaaaaaaa\naaaa\n\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		textMessage.setText("");
 		textMessage.setEditable(false);
+		textMessage.setBackground(SWTResourceManager.getColor(SWT.COLOR_TRANSPARENT));
 		textMessage.setBounds(365, 91, 298, 232);
 		textMessage.setVisible(false);
 		
@@ -162,16 +173,65 @@ public class PatInfo {
 		textSendMessage.setBounds(365, 354, 210, 71);
 		textSendMessage.setVisible(false);
 		
+		int messageNum = messageDao.countMessages(pat_id, patient.getDoc_id());
+		
+		for(int i = 0; i < messageNum; ++i) {
+			Message message = messageDao.findMessage(pat_id, patient.getDoc_id(), i);
+			//textMessage.setText(textMessage.getText() + message.getMes_time() + " ");
+			textMessage.append("\n" + message.getMes_time() + " ");
+			
+			if(message.getMes_sentByDoc() == 0) {
+				//textMessage.setText(textMessage.getText() + "\n你: " + message.getMes_text() + "\n\n");
+				textMessage.append("\n患者: " + message.getMes_text() + "\n");
+			}
+			else {
+				//textMessage.setText(textMessage.getText() + "\n医生: " + message.getMes_text() + "\n\n");
+				textMessage.append("\n你:" + message.getMes_text() + "\n");
+			}
+			
+			//textMessage.setText(textMessage.getText() + message.getMes_text() + "\n\r");
+			
+		}
+		textMessage.setTopIndex(Integer.MAX_VALUE); //http://blog.csdn.net/java2000_net/article/details/3905307
+		
 		Button btnSend = new Button(shell, SWT.NONE);
+		btnSend.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+				//String time = Integer.toString(timestamp.getYear());
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String time = simpleDateFormat.format(new Date());
+				Message message = new Message(patient.getDoc_id(), pat_id, textSendMessage.getText(), time, 1);
+				
+				messageDao.sendMessage(message);
+				//textMessage.setText(textMessage.getText() + "\n" + message.getMes_time()  + "\n你: " + message.getMes_text() + "\n");
+				textMessage.append("\n" + message.getMes_time() + "\n你: " + message.getMes_text() + "\n");
+				textSendMessage.setText("");
+			}
+		});
 		btnSend.setBounds(593, 354, 70, 71);
 		btnSend.setText("\u53D1\u9001");
 		btnSend.setVisible(false);
 		
-		textAdvice = new Text(shell, SWT.BORDER);
+		textAdvice = new Text(shell, SWT.BORDER | SWT.MULTI | SWT.WRAP);
 		textAdvice.setBounds(365, 160, 298, 163);
 		textAdvice.setVisible(false);
 		
 		Button btnSendAdvice = new Button(shell, SWT.NONE);
+		btnSendAdvice.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String time = simpleDateFormat.format(new Date());
+				Suggestion suggestion = new Suggestion(pat_id, textAdvice.getText(), time);
+				SuggestionDao suggestionDao = new SuggestionDao();
+				suggestionDao.addSuggestion(suggestion);
+				MessageBox messageBox = new MessageBox(shell);
+				messageBox.setMessage("发送成功");
+				messageBox.open();
+			}
+		});
 		btnSendAdvice.setBounds(461, 368, 114, 34);
 		btnSendAdvice.setText("\u53D1\u9001");
 		btnSendAdvice.setVisible(false);
@@ -216,8 +276,8 @@ public class PatInfo {
 		Button btnPre = new Button(shell, SWT.NONE);
 		Button btnNext = new Button(shell, SWT.NONE);
 		
-		Label lblPage = new Label(shell, SWT.NONE);
-		lblPage.setBounds(487, 445, 90, 24);
+		//Label lblPage = new Label(shell, SWT.NONE);
+		//lblPage.setBounds(487, 445, 90, 24);
 		
 		
 		
@@ -295,14 +355,14 @@ public class PatInfo {
 				
 				index = pressureNum - 1;
 				
-				lblPage.setText(Integer.toString(index));
+				//lblPage.setText(Integer.toString(index));
 				
 				btnPre.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
 						if(index < pressureNum - 1) {
 							index = index + 1;
-							lblPage.setText(Integer.toString(index));
+							//lblPage.setText(Integer.toString(index));
 							Pressure pressure = pressureDao.findByPatIDandIndex(pat_id, index);
 							if(pressure == null) {
 								lblDiastolic0.setText("无记录");
@@ -325,7 +385,7 @@ public class PatInfo {
 					public void widgetSelected(SelectionEvent e) {
 						if(index > 0) {
 							index = index - 1;
-							lblPage.setText(Integer.toString(index));
+							//lblPage.setText(Integer.toString(index));
 							Pressure pressure = pressureDao.findByPatIDandIndex(pat_id, index);
 							if(pressure == null) {
 								lblDiastolic0.setText("无记录");
@@ -352,7 +412,7 @@ public class PatInfo {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				index = pressureNum - 1;
-				lblPage.setText(Integer.toString(index));
+				//lblPage.setText(Integer.toString(index));
 				lblAge.setVisible(false);
 				lblWeight.setVisible(false);
 				lblFamilialDisease.setVisible(false);
@@ -383,7 +443,7 @@ public class PatInfo {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				index = pressureNum - 1;
-				lblPage.setText(Integer.toString(index));
+				//lblPage.setText(Integer.toString(index));
 				lblAge.setVisible(false);
 				lblWeight.setVisible(false);
 				lblFamilialDisease.setVisible(false);
@@ -414,7 +474,7 @@ public class PatInfo {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				index = pressureNum - 1;
-				lblPage.setText(Integer.toString(index));
+				//lblPage.setText(Integer.toString(index));
 				lblAge.setVisible(false);
 				lblWeight.setVisible(false);
 				lblFamilialDisease.setVisible(false);
@@ -440,8 +500,20 @@ public class PatInfo {
 		btnNote.setText("\u5907\u5FD8");
 		btnNote.setBounds(88, 410, 114, 34);
 		
+		Button btnCancel = new Button(shell, SWT.NONE);
+		btnCancel.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				patientDao.cancelPatient(patient);
+				MessageBox messageBox = new MessageBox(shell);
+				messageBox.setMessage("您已取消关联该患者");
+				messageBox.open();
+			}
+		});
+		btnCancel.setBounds(565, 475, 76, 34);
+		btnCancel.setText("\u53D6\u6D88\u5173\u8054");
+		
 		
 
 	}
-
 }
